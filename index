@@ -1,0 +1,487 @@
+import React, { useState } from 'react';
+import { ShoppingBag, Star, ShieldCheck, Truck, Heart, Menu, X, MessageCircle, Filter, Sparkles } from 'lucide-react';
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [selectedGender, setSelectedGender] = useState("Todos");
+
+  // WhatsApp de vendas real ou de simulação
+  const whatsappNumber = "5511999999999"; 
+
+  // Catálogo completo atualizado com as novas fragrâncias e preços reais das etiquetas
+  const products = [
+    {
+      id: 1,
+      name: "Haya",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 389,90",
+      description: "Fragrância floral requintada com notas de champanhe rosa, tangerina e jasmim imperial.",
+      image: "https://i.imgur.com/tCQtPSk.png",
+      colorTag: "bg-pink-100 text-pink-800",
+      badge: "Mais Vendido"
+    },
+    {
+      id: 2,
+      name: "Emaan",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Compartilhável",
+      price: "R$ 359,90",
+      description: "Uma essência mística com jasmim, calêndula e ricas notas de patchouli e âmbar.",
+      image: "https://i.imgur.com/A7UFy07.png",
+      colorTag: "bg-blue-100 text-blue-800",
+      badge: "Premium"
+    },
+    {
+      id: 3,
+      name: "Yara",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 329,90",
+      description: "Doce, cremoso e irresistível com toques de orquídea, baunilha e notas tropicais gourmet.",
+      image: "https://i.imgur.com/UP6H8IZ.png",
+      colorTag: "bg-rose-100 text-rose-800",
+      badge: "Queridinho"
+    },
+    {
+      id: 4,
+      name: "Malikat Al Arab",
+      brand: "Manasik",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 349,90",
+      description: "A rainha da sedução oriental. Toque real de almíscar branco, sândalo e flores raras.",
+      image: "https://i.imgur.com/SuIClLw.png",
+      colorTag: "bg-red-100 text-red-800",
+      badge: "Elegante"
+    },
+    {
+      id: 5,
+      name: "Sabah Al Ward",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 460,00",
+      description: "Profundidade e elegância incomparáveis. Mistura de cacau, pimenta rosa e flores noturnas.",
+      image: "https://i.imgur.com/7jYmMiM.png",
+      colorTag: "bg-purple-100 text-purple-800",
+      badge: "Exclusivo"
+    },
+    {
+      id: 6,
+      name: "Fakhar",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Masculino",
+      price: "R$ 399,90",
+      description: "Especiarias frescas combinadas a madeiras nobres e âmbar cinzento de alta fixação.",
+      image: "https://i.imgur.com/s1YWh0M.png",
+      colorTag: "bg-gray-100 text-gray-800",
+      badge: "Clássico"
+    },
+    {
+      id: 7,
+      name: "Khamrah",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Compartilhável",
+      price: "R$ 570,00",
+      description: "Uma jóia olfativa ultraluxuosa de notas quentes de canela, tâmara madura, pralinê e baunilha cremosa.",
+      image: "https://i.imgur.com/WSz4VQz.png",
+      colorTag: "bg-amber-100 text-amber-800",
+      badge: "Obra-prima"
+    },
+    {
+      id: 8,
+      name: "Attar Al Wesal",
+      brand: "Al Wataniah",
+      category: "Árabes de Luxo",
+      gender: "Compartilhável",
+      price: "R$ 560,00",
+      description: "Um perfume sedutor, quente e incrivelmente magnético com especiarias orientais refinadas.",
+      image: "https://i.imgur.com/eSe5nmJ.png",
+      colorTag: "bg-stone-200 text-stone-800",
+      badge: "Oud Premium"
+    },
+    {
+      id: 9,
+      name: "Sabah Al Ward Sugar",
+      brand: "Lattafa",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 475,00",
+      description: "Versão doce refinada do clássico, com xarope de caramelo, baunilha e acordes florais intensos.",
+      image: "https://i.imgur.com/pftD0hB.png",
+      colorTag: "bg-rose-100 text-rose-800",
+      badge: "Novidade Doce"
+    },
+    {
+      id: 10,
+      name: "Princess Zirconia Privé",
+      brand: "Zirconia",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 520,00",
+      description: "Fragrância marcante digna da realeza moderna, com notas intensas of almíscar, jasmim e flor de laranjeira.",
+      image: "https://i.imgur.com/x4cL3Oz.png",
+      colorTag: "bg-amber-50 text-amber-900",
+      badge: "Realeza"
+    },
+    {
+      id: 11,
+      name: "Tibyan",
+      brand: "Al Wataniah",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 530,00", // Preço da etiqueta (R$ 530,00)
+      description: "A epítome da sofisticação árabe, trazendo um rastro inesquecível de madeiras quentes e jasmim sutil.",
+      image: "https://i.imgur.com/x2s7GU5.png",
+      colorTag: "bg-amber-50 text-amber-900",
+      badge: "Exclusivo"
+    },
+    {
+      id: 12,
+      name: "Ward Al Ghar'am",
+      brand: "Manasik",
+      category: "Árabes de Luxo",
+      gender: "Feminino",
+      price: "R$ 400,00", // Preço da etiqueta (R$ 400,00)
+      description: "Poesia romântica em forma líquida. Acordes florais frescos com base envolvente de musk.",
+      image: "https://i.imgur.com/TJ5FlSc.png",
+      colorTag: "bg-red-50 text-red-700",
+      badge: "Romântico"
+    },
+    {
+      id: 13,
+      name: "Dreaming Party VIP Rose",
+      brand: "Dreaming",
+      category: "Dia a Dia",
+      gender: "Feminino",
+      price: "R$ 100,00",
+      description: "Inspirado no agito das festas mais glamourosas, com notas frutadas frescas e excelente custo-benefício.",
+      image: "https://i.imgur.com/BgS4nFA.png",
+      colorTag: "bg-pink-100 text-pink-700",
+      badge: "Custo-Benefício"
+    },
+    {
+      id: 14,
+      name: "Only You No. 803",
+      brand: "Only You",
+      category: "Dia a Dia",
+      gender: "Feminino",
+      price: "R$ 100,00",
+      description: "Suave, delicado e encantador para todas as horas. O equilíbrio perfeito para sua rotina diária.",
+      image: "https://i.imgur.com/HMWhsyy.png",
+      colorTag: "bg-slate-100 text-slate-800",
+      badge: "Delicado"
+    }
+  ];
+
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
+    const matchesGender = selectedGender === "Todos" || product.gender === selectedGender;
+    return matchesCategory && matchesGender;
+  });
+
+  const handleAddToCart = (productName) => {
+    setCartCount(prev => prev + 1);
+    const message = encodeURIComponent(`Olá, Rose Perfumaria! Gostaria de reservar o perfume ${productName}. Poderia me passar os detalhes de entrega?`);
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-stone-50 font-sans text-stone-800 relative">
+      
+      {}
+      <a 
+        href={`https://wa.me/${whatsappNumber}?text=Olá!%20Gostaria%20de%20conhecer%20as%20fragrâncias%20exclusivas%20da%20sua%20loja.`}
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="fixed bottom-8 right-8 z-[100] bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-300 animate-bounce group"
+        aria-label="Fale Conosco no WhatsApp"
+      >
+        <MessageCircle className="h-8 w-8" />
+        <span className="absolute right-full mr-4 bg-white text-stone-800 px-4 py-2 rounded-lg text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          Fale Conosco!
+        </span>
+      </a>
+
+      {}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex-shrink-0 flex items-center cursor-pointer">
+              <span className="text-2xl font-light tracking-widest text-stone-900 uppercase">
+                Rose <span className="font-semibold text-rose-500">Perfumaria</span>
+              </span>
+            </div>
+
+            <nav className="hidden md:flex space-x-10">
+              <a href="#" className="text-sm font-medium text-stone-600 hover:text-rose-500 transition-colors uppercase tracking-widest">Início</a>
+              <a href="#produtos" className="text-sm font-medium text-stone-600 hover:text-rose-500 transition-colors uppercase tracking-widest">Produtos</a>
+              <a href="#garantia" className="text-sm font-medium text-stone-600 hover:text-rose-500 transition-colors uppercase tracking-widest">Garantia</a>
+            </nav>
+
+            <div className="flex items-center space-x-5">
+              <button className="relative p-2 text-stone-600 hover:text-rose-500 transition-colors">
+                <ShoppingBag className="h-6 w-6" />
+                {cartCount > 0 && (
+                  <span className="absolute top-1 right-1 inline-flex items-center justify-center px-2 py-1 text-[10px] font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-500 rounded-full animate-pulse">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-stone-600">
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-stone-100 px-4 py-6 space-y-4 text-center">
+            <a href="#" className="block text-stone-700 font-medium hover:text-rose-500 uppercase tracking-widest" onClick={() => setIsMenuOpen(false)}>Início</a>
+            <a href="#produtos" className="block text-stone-700 font-medium hover:text-rose-500 uppercase tracking-widest" onClick={() => setIsMenuOpen(false)}>Produtos</a>
+            <a href="#garantia" className="block text-stone-700 font-medium hover:text-rose-500 uppercase tracking-widest" onClick={() => setIsMenuOpen(false)}>Garantia</a>
+          </div>
+        )}
+      </header>
+
+      {}
+      <section className="relative h-[85vh] flex items-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[10000ms] hover:scale-105"
+          style={{ 
+            backgroundImage: 'url("https://i.imgur.com/oYFCxsZ.png")',
+          }}
+        ></div>
+        
+        <div className="absolute inset-0 bg-stone-900/40 sm:bg-gradient-to-r sm:from-stone-900/80 sm:to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="max-w-xl text-white">
+            <span className="text-rose-300 font-bold uppercase tracking-[0.3em] text-xs mb-3 block">Fragrâncias Originais & Exclusivas</span>
+            <h1 className="text-5xl md:text-7xl font-extralight mb-6 leading-tight drop-shadow-xl">
+              Sinta a <br />
+              <span className="font-semibold text-rose-300">Sedução Árabe</span>
+            </h1>
+            <p className="text-lg md:text-xl text-stone-100 mb-8 font-light leading-relaxed drop-shadow-md">
+              A elegância oriental capturada em cada detalhe. Explore a nossa curadoria de perfumes de alta fixação com garantia de procedência.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+              <a href="#produtos" className="bg-rose-500 text-white text-center px-10 py-4 rounded-full font-semibold hover:bg-rose-600 transition-all duration-300 uppercase text-xs tracking-[0.2em] shadow-lg">
+                Comprar Agora
+              </a>
+              <a href="#produtos" className="border border-white/40 backdrop-blur-sm text-center text-white px-10 py-4 rounded-full font-semibold hover:bg-white/10 transition-all duration-300 uppercase text-xs tracking-[0.2em]">
+                Ver Catálogo
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {}
+      <section id="garantia" className="bg-white py-16 border-b border-stone-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+              <div className="flex-shrink-0 w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500">
+                <ShieldCheck className="h-7 w-7" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-stone-900">Originalidade Garantida</h3>
+                <p className="text-sm text-stone-500">Trabalhamos apenas com produtos 100% autênticos e lacrados de fábrica.</p>
+              </div>
+            </div>
+            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+              <div className="flex-shrink-0 w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500">
+                <Truck className="h-7 w-7" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-stone-900">Entrega Expressa</h3>
+                <p className="text-sm text-stone-500">Entrega rápida, protegida e rastreada diretamente para você.</p>
+              </div>
+            </div>
+            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+              <div className="flex-shrink-0 w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500">
+                <Heart className="h-7 w-7" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-stone-900">Atendimento Premium</h3>
+                <p className="text-sm text-stone-500">Orientação personalizada para encontrar o aroma perfeito para sua pele.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {}
+      <section id="produtos" className="py-24 bg-stone-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 space-y-4 text-center md:text-left">
+            <div>
+              <h2 className="text-sm font-bold text-rose-500 uppercase tracking-[0.3em] mb-3">Sua fragrância perfeita</h2>
+              <h3 className="text-4xl font-light text-stone-900">Nossa <span className="italic font-serif">Coleção de Luxo</span></h3>
+            </div>
+            <p className="text-stone-500 max-w-md text-sm leading-relaxed mx-auto md:mx-0">
+              Explore nossa vitrine de fragrâncias árabes de alta projeção e importados com sofisticação inigualável.
+            </p>
+          </div>
+
+          {/* BARRA DE FILTROS */}
+          <div className="bg-white p-6 rounded-3xl border border-stone-100 shadow-sm mb-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex flex-wrap gap-2 items-center w-full justify-center md:justify-start">
+              <span className="text-stone-400 text-xs font-semibold uppercase tracking-wider mr-2 flex items-center gap-1">
+                <Filter className="h-3.5 w-3.5" /> Coleção:
+              </span>
+              {["Todos", "Árabes de Luxo", "Dia a Dia"].map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-5 py-2 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 uppercase ${
+                    selectedCategory === category
+                      ? "bg-rose-500 text-white shadow-md shadow-rose-200"
+                      : "bg-stone-50 text-stone-600 hover:bg-stone-100"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-2 items-center w-full justify-center md:justify-end">
+              <span className="text-stone-400 text-xs font-semibold uppercase tracking-wider mr-2">Gênero:</span>
+              {["Todos", "Feminino", "Masculino", "Compartilhável"].map((gender) => (
+                <button
+                  key={gender}
+                  onClick={() => setSelectedGender(gender)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 uppercase ${
+                    selectedGender === gender
+                      ? "bg-stone-900 text-white shadow-md"
+                      : "bg-stone-50 text-stone-600 hover:bg-stone-100"
+                  }`}
+                >
+                  {gender}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* QUANTIDADE DE PRODUTOS ENCONTRADOS */}
+          <div className="text-xs text-stone-400 mb-8 uppercase tracking-widest text-center md:text-left">
+            Exibindo <span className="font-bold text-stone-800">{filteredProducts.length}</span> perfumes de {products.length} disponíveis
+          </div>
+
+          {/* GRID DE PRODUTOS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="group cursor-pointer flex flex-col justify-between bg-white p-4 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 border border-stone-100">
+                <div>
+                  {/* Container da imagem */}
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-[1.75rem] bg-stone-50 mb-6 shadow-inner border border-stone-100/50">
+                    <img 
+                      src={product.image} 
+                      alt={`[Imagem do Perfume ${product.name}]`} 
+                      className="object-cover w-full h-full transition-all duration-1000 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    
+                    {/* Tags */}
+                    <div className="absolute top-6 left-6 flex flex-col gap-2">
+                      <span className={`text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest ${product.colorTag} shadow-sm`}>
+                        {product.brand}
+                      </span>
+                      {product.badge && (
+                        <span className="bg-stone-900/90 text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
+                          <Sparkles className="h-2 w-2 text-rose-400 fill-rose-400" />
+                          {product.badge}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Detalhes do perfume */}
+                  <div className="text-center px-4 mb-4">
+                    <div className="flex justify-center items-center space-x-1 text-amber-400 mb-2">
+                      {[...Array(5)].map((_, i) => <Star key={i} className="h-3 w-3 fill-current" />)}
+                      <span className="text-stone-400 text-xs font-semibold ml-2">5.0</span>
+                    </div>
+                    <h3 className="text-xl font-medium text-stone-900 mb-1 group-hover:text-rose-500 transition-colors">{product.name}</h3>
+                    <p className="text-stone-400 text-xs uppercase tracking-widest font-semibold mb-3">{product.gender} • {product.category}</p>
+                    <p className="text-stone-500 text-sm mb-4 line-clamp-2 leading-relaxed">{product.description}</p>
+                  </div>
+                </div>
+
+                {/* Comprar e Preço */}
+                <div className="px-4 pt-4 border-t border-stone-50 mt-auto">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] text-stone-400 uppercase tracking-widest">À Vista</p>
+                      <p className="text-2xl font-bold text-rose-600 font-serif">{product.price}</p>
+                    </div>
+                    <button 
+                      onClick={(e) => { e.preventDefault(); handleAddToCart(product.name); }}
+                      className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-2 shadow-lg shadow-rose-100"
+                    >
+                      <MessageCircle className="h-4 w-4" /> Comprar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CASO NÃO ENCONTRE PRODUTOS NO FILTRO */}
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-24 bg-white rounded-3xl border border-stone-100 shadow-sm">
+              <Sparkles className="h-12 w-12 text-stone-300 mx-auto mb-4" />
+              <p className="text-stone-600 font-medium">Nenhum perfume encontrado com esses filtros.</p>
+              <button 
+                onClick={() => { setSelectedCategory("Todos"); setSelectedGender("Todos"); }}
+                className="mt-4 text-rose-500 text-sm font-bold uppercase tracking-wider hover:underline"
+              >
+                Limpar Filtros
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {}
+      <footer className="bg-stone-950 text-stone-400 py-20 border-t border-stone-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-3xl font-light tracking-[0.4em] text-white uppercase mb-8 block">
+            Rose <span className="font-semibold text-rose-500">Perfumaria</span>
+          </span>
+          
+          <div className="flex justify-center space-x-12 mb-12">
+            <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors cursor-pointer uppercase text-xs tracking-widest font-semibold flex items-center gap-2">
+              <MessageCircle className="h-4 w-4 text-green-500" /> WhatsApp
+            </a>
+            <span className="hover:text-white transition-colors cursor-pointer uppercase text-xs tracking-widest font-semibold">Instagram</span>
+            <span className="hover:text-white transition-colors cursor-pointer uppercase text-xs tracking-widest font-semibold">Sobre Nós</span>
+          </div>
+
+          <p className="text-sm max-w-md mx-auto mb-12 leading-relaxed opacity-60">
+            A sua porta de entrada para o world das fragrâncias orientais de alta fixação. 
+            Luxo, confiança e sofisticação em cada borrifada.
+          </p>
+
+          <div className="border-t border-white/5 pt-10 text-[10px] uppercase tracking-[0.2em] font-medium opacity-40">
+            &copy; 2026 Rose Perfumaria. Todos os direitos reservados.
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+};
+
+export default App;
